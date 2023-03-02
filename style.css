@@ -77,6 +77,8 @@ table.board a.player2 .stone {
 }
 
 table.board #square {
+    display: none;
+    cursor: pointer;
     box-sizing: border-box;
     position: absolute;
     top: 0;

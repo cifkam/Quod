@@ -9,8 +9,9 @@ function cellIdToCoords(id)
     return [ord(id[0])-ordA, ord(id[1])-ordA];
 }
 
-function clearBoard()
+function resetGame()
 {
+    
     const board = document.querySelector("table.board");
     Array.from(board.children).forEach((row) => {
         Array.from(row.children).forEach((data) => {
@@ -24,15 +25,20 @@ function clearBoard()
     });
  
     const square = document.querySelector("table.board #square");
+    square.style.display = "";
     square.classList.remove(playerClass[0]);
     square.classList.remove(playerClass[1]);
+    playerQuods = [[],[]];
+    finished = false;
+    player = 0;
 }
 
 
 function mark(cell, i, j) {
     if (finished)
     {
-        clearBoard();
+        resetGame();
+        return;
     }
 
 
@@ -74,6 +80,14 @@ function createBoard()
             
             const td = document.createElement("td");
             
+            if (i == 0 && j == 0) // prepare the square
+            {
+                const square = document.createElement("div");
+                square.id = "square";
+                td.appendChild(square);
+                square.onclick = function(){resetGame();};
+            }
+
             if (!(i == 0 && (j == 0 || j == 10) || i == 10 && (j == 0 || j == 10)))
             {
                 const cell = document.createElement("a");
@@ -85,6 +99,7 @@ function createBoard()
                 cell.appendChild(stone);
                 td.appendChild(cell);
             }
+
             tr.appendChild(td);
         }
         board.appendChild(tr);
@@ -168,15 +183,12 @@ function drawSquare(a,b,c,d)
 
     const td = document.querySelector("table.board").children[0].children[0];
     td.style.position = "relative";
-    const square = document.createElement("div");
 
+    const square = document.getElementById("square");
+
+    square.style.display = "block";
     square.style.width = size + "px";
     square.style.height = size + "px";
     square.style.transform = "translate(" + sx + "px, " + sy + "px) rotate("+angle+"deg)";
-    square.style.boxSizing = "border-box";
     square.classList.add(playerClass[player]);
-    square.id = "square";
-    
-    td.innerHTML="";
-    td.appendChild(square);
 }
