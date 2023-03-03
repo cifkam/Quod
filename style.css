@@ -1,5 +1,32 @@
+@font-face {
+    font-family: OpenSans;
+    src: url(OpenSans-Regular.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: OpenSans;
+    src: url(OpenSans-Medium.ttf);
+    font-weight: 500;
+}
+
 body {
     margin: 10px;
+    font-family: OpenSans;
+    text-align: center;
+}
+
+main {
+    padding: 0 20px 20px 20px;
+    border: 5px #eaeaea solid;
+    border-radius: 8px;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+table.board tr:first-child td:first-child {
+    position: relative;
 }
 
 table.board td {
@@ -28,9 +55,10 @@ table.board a {
 table.board tr td a {
     width: 40px;
     height: 40px;
-    background-color: #eee;
     display: inline-block;
     border-radius: 10%;
+    border-radius: 4px;
+    transition: all 0.4s ease;
 }
 
 table.board tr td a:hover {
@@ -38,10 +66,9 @@ table.board tr td a:hover {
     height: 40px;
     background-color: rgba(0,0,0,0.25);
     display: inline-block;
-    transition: all 0.4s ease;
 }
 
-table.board .stone {
+table.board .quod {
     display: block;
     width: 80%;
     height: 80%;
@@ -52,41 +79,99 @@ table.board .stone {
 table.board tr td a,
 table.board tr td a.player1:hover,
 table.board tr td a.player2:hover {
-    background-color: #eee;
+    background-color: #eaeaea;
 }
 
-table.board a.player1 .stone {
+table.board a.player1 .quod {
     background-color: #ffc500;
 }
 
-table.board #square {
-    border: 4px dashed black;
-}
-
-table.board a.player2 .stone {
+table.board a.player2 .quod {
     background-color: #0083da;
 }
 
+
 table.board #square {
-    display: none;
+    border: 4px dashed black;
+    transition: all 0.4s ease;
+    display: flex;
     cursor: pointer;
     box-sizing: border-box;
     position: absolute;
-    top: 0;
-    left: 0;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgb(0, 0, 0, 0.25);
+
+    /* some initial settings for cool first animation*/
+    top: 100%;
+    left: 100%;
+    width: 200%;
+    height: 200%;
 }
 
 table.board #square:hover {
-    background-color: rgba(0,0,0,0.25);
+    background-color: rgb(0, 0, 0, 0.4);
 }
+
+/*
+table.board #square.player1 {
+    border-color: #ffc500;
+}
+table.board #square.player2 {
+    border-color: #0083da;
+}
+*/
 
 .player-controls {
     margin: 10px 0;
 }
 
-.player-controls span
-{
+.player-controls {
+    padding: 5px 5px 5px 82px;
+    display: flex;
+    border-radius: 4px;
+}
+
+.player-controls.player1 {
+    background-color: #ffedb3;
+}
+
+.player-controls.player2 {
+    background-color: #b3c9d9;
+}
+
+.player-controls a {
     display: inline-block;
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
+    margin: 1px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.quasar,
+a.quasar {
+    background-color: #444;
+    width: 20px;
+    height: 20px;
+    margin: 10px 10px;
+    display: block;
+    border-radius: 50%;
+}
+
+.player-controls.player1 a:first-child {
+    background-color: #ffc500;
+    margin: 4px;
+}
+
+.player-controls.player2 a:first-child {
+    background-color: #0083da;
+    margin: 4px;
+}
+
+.grayscale {
+    filter: grayscale(1);
 }

@@ -1,7 +1,8 @@
 const ordA = ord('A');
 var player = 0;
-var playerClass = ["player1", "player2"]
-var playerQuods = [[],[]]
+var playerClass = ["player1", "player2"];
+var playerQuods = [[],[]];
+var quasars = [];
 var finished = false;
 
 function cellIdToCoords(id)
@@ -20,27 +21,31 @@ function resetGame()
             {
                 cell.classList.remove(playerClass[0]);
                 cell.classList.remove(playerClass[1]);
+                const a = cell.querySelector("span");
+                a.classList.remove("quod");
+                a.classList.remove("quasar");
             }
         })
     });
  
     const square = document.querySelector("table.board #square");
-    square.style.display = "";
+    square.style.visibility = "";
+    square.style.opacity = 0;
     square.classList.remove(playerClass[0]);
     square.classList.remove(playerClass[1]);
     playerQuods = [[],[]];
+    var quasars = [];
     finished = false;
     player = 0;
 }
 
 
-function mark(cell, i, j) {
+function move(cell, i, j) {
     if (finished)
     {
         resetGame();
         return;
     }
-
 
     var coords = [i,j];
     if (cell.classList.contains(playerClass[0]) || cell.classList.contains(playerClass[1]))
@@ -48,6 +53,7 @@ function mark(cell, i, j) {
 
     cell.classList.add(playerClass[player]);
     playerQuods[player].push(coords);
+    cell.querySelector("span").classList.add("quod")
     var [a,b,c,d] = findSquare();
     if (a !== undefined)
     {
@@ -73,8 +79,10 @@ function createControls()
     const controls1 = document.querySelector(".player1.player-controls");
     const controls2 = document.querySelector(".player2.player-controls");
 
-    var q1 = document.createElement("a");
-    var q2 = document.createElement("a");
+    let q1 = document.createElement("a");
+    let q2 = document.createElement("a");
+    q1.classList.add(playerClass[0]);
+    q2.classList.add(playerClass[1]);
 
     controls1.appendChild(q1);
     controls2.appendChild(q2);
@@ -82,6 +90,8 @@ function createControls()
     {
         q1 = document.createElement("a");
         q2 = document.createElement("a");
+        q1.classList.add("quasar")
+        q2.classList.add("quasar")
 
         controls1.appendChild(q1);
         controls2.appendChild(q2);
@@ -105,6 +115,13 @@ function createBoard()
             {
                 const square = document.createElement("div");
                 square.id = "square";
+
+                const svg = document.createElement("img");
+                svg.src = "arrow-rotate-right.svg";
+                svg.style.width = "40px";
+                svg.style.maxWidth = "85%";
+
+                square.appendChild(svg);
                 td.appendChild(square);
                 square.onclick = function(){resetGame();};
             }
@@ -113,11 +130,11 @@ function createBoard()
             {
                 const cell = document.createElement("a");
                 cell.id = chr(i+ordA) + chr(j+ordA);
-                cell.onclick = function(){mark(cell, i, j);};
+                cell.onclick = function(){move(cell, i, j);};
                 cell.classList.add("cell")
-                const stone = document.createElement("span");
-                stone.classList.add("stone");
-                cell.appendChild(stone);
+                const quod = document.createElement("span");
+                //quod.classList.add("quod");
+                cell.appendChild(quod);
                 td.appendChild(cell);
             }
 
@@ -190,9 +207,8 @@ function drawSquare(a,b,c,d)
 {
     const cellSizeMultiplier = 1.0413
     var vec = vSub(b,a);
-    var angle = vAngle(vec, [0,1]);
-    if (vec[0] < 0)
-        angle = -angle;
+    var angle = vAngle(vec, [0,1]) % 90;
+    if (vec[0] < 0) angle = -angle;
 
     var squareSize = vLength(vSub(a,b));
     let [sy, sx] = vMean([a,b,c,d]);
@@ -205,7 +221,8 @@ function drawSquare(a,b,c,d)
 
     const square = document.getElementById("square");
 
-    square.style.display = "block";
+    square.style.visibility = "visible";
+    square.style.opacity = 1;
     square.style.width = squareSize*100*cellSizeMultiplier + "%";
     square.style.height = squareSize*100*cellSizeMultiplier + "%";
     square.style.left = sx*100*cellSizeMultiplier + "%"
