@@ -35,7 +35,7 @@ main {
     padding: 0 20px 20px 20px;
     border: 5px var(--lightgray) solid;
     border-radius: 8px;
-    transition: all 1s ease;
+    transition: all 1s ease, transform 0s;
 }
 
 main header {
@@ -43,10 +43,10 @@ main header {
     
 }
 
-#reset-button {
+#reset-button,
+#menu-button {
     position: absolute;
     top: 0;
-    right: 0;
     margin-top: 3px;
     padding: 4px;
     border: 2px var(--lightgray) solid;
@@ -55,14 +55,27 @@ main header {
     height: 25px;
 }
 
-#reset-button img {
-    width: 25px;
+#reset-button {
+    right: 0;
+}
+
+#menu-button {
+    left: 0;
+}
+
+#reset-button img,
+#menu-button img {
+    width: 23px;
 }
 
 img { user-select: none; }
 h1 {
     font-weight: 500;
     margin-top: 20px;
+}
+
+table.board {
+    margin: auto;
 }
 
 table.board tr:first-child td:first-child {
@@ -84,8 +97,8 @@ table.board td {
     position: absolute;
     top: 50%;
     left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -55%);
+    transform: translate(-50%, -55%);
 }
 
 
@@ -98,10 +111,7 @@ table.board tr td a {
 }
 
 table.board tr td a:hover {
-    width: 40px;
-    height: 40px;
     background-color: var(--gray);
-    display: inline-block;
 }
 
 table.board .quod {
@@ -171,8 +181,9 @@ table.board #square.player2 {
 }
 
 .player-controls {
-    padding: 5px 5px 5px 82px;
+    padding: 5px;
     display: flex;
+    justify-content: center;
     border-radius: 4px;
 }
 
@@ -208,7 +219,7 @@ a.quasar {
 
 .quasar.used {
     background-color: red;
-    display: none;
+    visibility: hidden;
 }
 
 .player-controls.player1 a:first-child {
@@ -223,4 +234,35 @@ a.quasar {
 
 .grayscale {
     filter: grayscale(1);
+}
+
+@media only screen and (max-width: 530px) {
+    main {
+        border: none;
+        padding: 0!important;
+    }
+}
+@media only screen and (max-width: 470px) {
+    table.board tr td a {
+        width: 37px;
+        height: 37px;
+    }
+}
+@media only screen and (max-width: 435px) {
+    table.board tr td a {
+        width: 34px;
+        height: 34px;
+    }
+}
+@media only screen and (max-width: 400px) {
+    table.board tr td a {
+        width: 31px;
+        height: 31px;
+    }
+}
+@media only screen and (max-width: 365px) {
+    table.board tr td a {
+        width: 28px;
+        height: 28px;
+    }
 }

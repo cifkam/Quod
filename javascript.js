@@ -119,11 +119,9 @@ function addQuasar(coords, cell)
     quasars.push(coords);
     cell.querySelector("span").classList.add("quasar");
     const controls = getPlayerControls();
-    let quasar = controls.querySelector(".quasar.selected");
-    if (quasar == null)
-        quasar = Array.from(controls.querySelectorAll(".quasar"))
-            .reverse()
-            .find(q => !q.classList.contains("used"));
+    quasar = Array.from(controls.querySelectorAll(".quasar"))
+        .reverse()
+        .find(q => !q.classList.contains("used"));
     quasar.classList.remove("selected");
     quasar.classList.add("used");
 }
