@@ -68,6 +68,27 @@ function ord(char) {
 }
 
 
+function createControls()
+{
+    const controls1 = document.querySelector(".player1.player-controls");
+    const controls2 = document.querySelector(".player2.player-controls");
+
+    var q1 = document.createElement("a");
+    var q2 = document.createElement("a");
+
+    controls1.appendChild(q1);
+    controls2.appendChild(q2);
+    for (let i = 0; i < 6; ++i)
+    {
+        q1 = document.createElement("a");
+        q2 = document.createElement("a");
+
+        controls1.appendChild(q1);
+        controls2.appendChild(q2);
+    }
+
+
+}
 
 function createBoard()
 {
@@ -77,7 +98,7 @@ function createBoard()
         const tr = document.createElement("tr");
         for (let j = 0; j < 11; ++j)
         {
-            
+
             const td = document.createElement("td");
             
             if (i == 0 && j == 0) // prepare the square
@@ -106,58 +127,60 @@ function createBoard()
     }
 }
 
+function bodyOnLoad()
+{
+    createControls();
+    createBoard();
+}
+
 
 function findSquare()
 {
-    // One of the points must be new - last item in playerQuods[player] array:
     const quods = playerQuods[player];
-    //const a = quods.length-1;
+    if (quods.length < 4)
+        return [undefined, undefined, undefined, undefined];
+
     
-    for (let a = 0; a < quods.length-3; ++a)
+    // One of the points must be new - last item in playerQuods[player] array:
+    const a = quods.length-1;
+    const qa = quods[a];
+
+    // Iterate over the others
+    for (let b = 0; b < quods.length-1; ++b)
     {
+        const qb = quods[b];
+        const vec = vOrtho(vSub(qb,qa));
 
-        const qa = quods[a];
+        // We already have 2 points, so we can generate only 4 candidates
+        // and check if we already have the right ones in the list
+        const candidates = [vAdd(qa,vec), vAdd(qb,vec), vSub(qa,vec), vSub(qb,vec)];
+        // 2 ← qa → 0
+        //     ↓
+        // 3 ← qb → 1
         
-        // Iterate over the others
-        for (let b = a+1; b < quods.length-2; ++b)
+        for (let c = 0; c < quods.length-1; ++c)
         {
-            const qb = quods[b];
-            const vec = vOrtho(vSub(qb,qa));
-
-            // We already have 2 points, so we can generate only 4 candidates
-            // and check if we already have the right ones in the list
-            const qcCandidates = [vAdd(qa,vec), vAdd(qb,vec), vSub(qa,vec), vSub(qb,vec)];
+            const qc = quods[c];
             
-            for (let c = b+1; c < quods.length-1; ++c)
-            {
-                const qc = quods[c];
-                
-                // Check if qc is a candidate
-                const idx = qcCandidates.findIndex((item) => {
-                    return vEquals(item, qc);
-                });
-                
-                if (idx === -1)
+            // Check if qc is a candidate
+            const idx = candidates.findIndex((item) => {
+                return vEquals(item, qc);
+            });
+            
+            if (idx === -1)
                 continue;
-                
-                // If yes, we already know the coordinates of the last point
-                // (idx == 0  :  qd=qcCandidates[1])
-                // (idx == 1  :  qd=qcCandidates[0])
-                // (idx == 2  :  qd=qcCandidates[3])
-                // (idx == 3  :  qd=qcCandidates[2])
-                const qd = qcCandidates[ idx+(idx+1)%2*2-1 ];
+            
 
-                // Check if qd is in the list
-                for (let d = c+1; d < quods.length-0; ++d)
-                {
-                    if (vEquals(qd, quods[d]))
-                    {
-                        return[qa, qb, qc, qd];
-                    }
-                }
+            const qd = candidates[ idx+(idx+1)%2*2-1 ];
+
+            // Check if qd is in the list
+            for (let d = 0; d < quods.length-1; ++d)
+            {
+                if (vEquals(qd, quods[d]))
+                    return[qa, qb, qc, qd];
             }
         }
-    } 
+    }
     
     return [undefined, undefined, undefined, undefined];
 }
@@ -165,21 +188,17 @@ function findSquare()
 
 function drawSquare(a,b,c,d)
 {
-    var cellSize = 41.82;
-    a = vMult(a,cellSize);
-    b = vMult(b,cellSize);
-    c = vMult(c,cellSize);
-    d = vMult(d,cellSize);
-
+    const cellSizeMultiplier = 1.0413
     var vec = vSub(b,a);
     var angle = vAngle(vec, [0,1]);
     if (vec[0] < 0)
         angle = -angle;
 
-    var size = vLength(vSub(a,b));
+    var squareSize = vLength(vSub(a,b));
     let [sy, sx] = vMean([a,b,c,d]);
-    sx = sx + cellSize/2 - size/2;
-    sy = sy + cellSize/2 - size/2;
+
+    sx = sx + 1/2 - squareSize/2;
+    sy = sy + 1/2 - squareSize/2;
 
     const td = document.querySelector("table.board").children[0].children[0];
     td.style.position = "relative";
@@ -187,8 +206,10 @@ function drawSquare(a,b,c,d)
     const square = document.getElementById("square");
 
     square.style.display = "block";
-    square.style.width = size + "px";
-    square.style.height = size + "px";
-    square.style.transform = "translate(" + sx + "px, " + sy + "px) rotate("+angle+"deg)";
+    square.style.width = squareSize*100*cellSizeMultiplier + "%";
+    square.style.height = squareSize*100*cellSizeMultiplier + "%";
+    square.style.left = sx*100*cellSizeMultiplier + "%"
+    square.style.top = sy*100*cellSizeMultiplier + "%"
+    square.style.transform = "rotate("+angle+"deg)";
     square.classList.add(playerClass[player]);
 }

@@ -1,17 +1,8 @@
 body {
     margin: 10px;
-    /* position: relative; */
-    /* width: 100%; */
-}
-
-main {
-    /* width: calc(100vw - 20px); */
-    /* height: calc(100vh - 20px); */
-    text-align: center;
 }
 
 table.board td {
-    height: 40px;
     padding: 0;
     margin: 0;
     border-collapse: collapse;
@@ -21,7 +12,7 @@ table.board td {
     line-height: 0;
 }
 
-table.board {
+.center {
     display: block;
     position: absolute;
     top: 50%;
@@ -45,7 +36,7 @@ table.board tr td a {
 table.board tr td a:hover {
     width: 40px;
     height: 40px;
-    background-color: #bbb;
+    background-color: rgba(0,0,0,0.25);
     display: inline-block;
     transition: all 0.4s ease;
 }
@@ -83,4 +74,19 @@ table.board #square {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+table.board #square:hover {
+    background-color: rgba(0,0,0,0.25);
+}
+
+.player-controls {
+    margin: 10px 0;
+}
+
+.player-controls span
+{
+    display: inline-block;
+    width: 42px;
+    height: 42px;
 }
