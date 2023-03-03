@@ -5,11 +5,15 @@
 <link rel="stylesheet" href="style.css">
 <script type="text/javascript" charset="UTF-8" src="mathFunctions.js"></script>
 <script type="text/javascript" charset="UTF-8" src="javascript.js"></script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body onload="bodyOnLoad();">
-    <main class="center">
-        <h1>Quod Game</h1>
+    <main class="center" style="opacity: 0;">
+        <header>
+            <h1>Quod Game</h1>
+            <a id="reset-button" href="javascript:resetGame();"><img src="arrow-rotate-right.svg"></a>
+        </header>
         <div class="player1 player-controls"></div>
         <table class="board">
         </table>

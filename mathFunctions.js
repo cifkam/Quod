@@ -52,5 +52,9 @@ function vDot(a,b)
 }
 function vAngle(a,b)
 {
-    return rad2deg( Math.acos(vDot(a,b)/(vLength(a)*vLength(b))) );
+    return rad2deg(
+        Math.acos(
+            vDot(a,b) / (vLength(a)*vLength(b))
+        )
+    );
 }
