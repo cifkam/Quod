@@ -60,8 +60,8 @@ function activateQuasars(player = null, quasar = null)
 
 function resetGame()
 {
-    document.querySelectorAll("table.board .cell a.quod").forEach(a => classList.remove("quod"));
-    document.querySelectorAll("table.board .cell a.quod").forEach(a => classList.remove("quasar"));
+    document.querySelectorAll("table.board .cell .quod").forEach(el => el.classList.remove("quod"));
+    document.querySelectorAll("table.board .cell .quasar").forEach(el => el.classList.remove("quasar"));
     document.querySelectorAll("table.board .cell").forEach(cell => {
         cell.classList.remove(playerClass[0]);
         cell.classList.remove(playerClass[1]);
