@@ -9,19 +9,17 @@
     font-weight: 500;
 }
 
-a {
-    cursor: pointer;
-}
+a  { cursor: pointer; }
 
 :root {
     --lightgray: #eaeaea;
     --gray: #bbb;
     --transparent-lightgray: rgba(0,0,0,0.25);
     --transparent-gray: rgba(0,0,0,0.4);
-    --player1-color: #ffc500;
-    --player2-color: #0083da;
-    --player1-color-light: #ffedb3;
-    --player2-color-light: #a8d0ec;
+    --player0-color: #ffc500;
+    --player1-color: #0083da;
+    --player0-color-light: #ffedb3;
+    --player1-color-light: #a8d0ec;
 }
 
 
@@ -89,13 +87,13 @@ table.board tr:first-child td:first-child {
 }
 
 table.board td {
-    padding: 0;
     margin: 0;
     border-collapse: collapse;
     border-spacing: 0;
     min-width: 0;
     min-height: 0;
     line-height: 0;
+    padding: 1px;
 }
 
 
@@ -129,12 +127,12 @@ table.board tr td a, table.board .taken:hover a{
     cursor: unset;
 }
 
-table.board a.player1 .quod {
-    background-color: var(--player1-color);
+table.board a.player0 .quod {
+    background-color: var(--player0-color);
 }
 
-table.board a.player2 .quod {
-    background-color: var(--player2-color);
+table.board a.player1 .quod {
+    background-color: var(--player1-color);
 }
 
 
@@ -166,14 +164,10 @@ table.board #square:hover {
     background-color: var(--transparent-gray);
 }
 
-/*
-table.board #square.player1 {
-    border-color: var(--player1-color);
+table.board #square img {
+    width: 40px;
+    max-width: 85%;
 }
-table.board #square.player2 {
-    border-color: var(--player2-color);
-}
-*/
 
 .player-controls {
     margin: 10px 0;
@@ -186,12 +180,12 @@ table.board #square.player2 {
     border-radius: 4px;
 }
 
-.player-controls.player1 {
-    background-color: var(--player1-color-light);
+.player-controls.player0 {
+    background-color: var(--player0-color-light);
 }
 
-.player-controls.player2 {
-    background-color: var(--player2-color-light);
+.player-controls.player1 {
+    background-color: var(--player1-color-light);
 }
 
 .player-controls span {
@@ -223,12 +217,12 @@ a.quasar {
     visibility: hidden;
 }
 
-.player-controls.player1 .quod {
-    background-color: var(--player1-color);
+.player-controls.player0 .quod {
+    background-color: var(--player0-color);
 }
 
-.player-controls.player2 .quod {
-    background-color: var(--player2-color);
+.player-controls.player1 .quod {
+    background-color: var(--player1-color);
 }
 
 .grayscale {

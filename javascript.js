@@ -1,4 +1,4 @@
-const playerClass = ["player1", "player2"];
+const playerClass = ["player0", "player1"];
 var currentPlayer = null;
 var playerQuods = null;
 var quasars = null;
@@ -60,6 +60,7 @@ function activateQuasars(player = null, quasar = null)
 
 function resetGame()
 {
+    // Remove all quads and quasars from the board
     document.querySelectorAll("table.board .cell .quod").forEach(el => el.classList.remove("quod"));
     document.querySelectorAll("table.board .cell .quasar").forEach(el => el.classList.remove("quasar"));
     document.querySelectorAll("table.board .cell").forEach(cell => {
@@ -67,19 +68,23 @@ function resetGame()
         cell.classList.remove(playerClass[1]);
     });
 
+    // Hide square
     const square = document.querySelector("table.board #square");
     square.style.visibility = "";
     square.style.opacity = "";
 
-    getPlayerControls(0).classList.remove("grayscale");
+    // Reset controls' appereance
+    getPlayerControls(0).classList.remove("grayscale"); // player0 starts
     getPlayerControls(1).classList.add("grayscale");
     document.querySelectorAll(".used").forEach(q => q.classList.remove("used"));
     document.querySelectorAll(".taken").forEach(q => q.classList.remove("taken"));
     
+    // Reset variables
     playerQuods = [[],[]];
     quasars = [];
     gameEnd = false;
     currentPlayer = 0;
+
     activateQuods();
 }
 
@@ -222,11 +227,8 @@ function createBoard()
             {
                 const square = document.createElement("div");
                 square.id = "square";
-
                 const svg = document.createElement("img");
                 svg.src = "arrow-rotate-right.svg";
-                svg.style.width = "40px";
-                svg.style.maxWidth = "85%";
 
                 square.appendChild(svg);
                 td.appendChild(square);
@@ -288,7 +290,7 @@ function findSquare()
             if (idx === -1)
             continue;
             
-            
+            // 0 <--> 1 ; 2 <--> 3
             const qd = candidates[ idx+(idx+1)%2*2-1 ];
             
             // Check if qd is in the list
@@ -306,29 +308,28 @@ function findSquare()
 
 function drawSquare(a,b,c,d)
 {
-    const cellSizeMultiplier = 1.0413
-    var vec = vSub(b,a);
-    var angle = vAngle(vec, [0, vec[0] > 0 ? 1 : -1]) % 90;
-    
-    var squareSize = vLength(vSub(a,b));
-    let [sy, sx] = vMean([a,b,c,d]);
-    
-    sx = sx + 1/2 - squareSize/2;
-    sy = sy + 1/2 - squareSize/2;
-    
-    const td = document.querySelector("table.board").children[0].children[0];
-    td.style.position = "relative";
-
     const square = document.getElementById("square");
+    
+    // Compute square rotation angle
+    var vec = vSub(b,a);
+    var angle = vAngle(vec, [0, vec[0] > 0 ? 1 : -1]);// % 90;
+    square.style.transform = "rotate("+angle+"deg)";
+    
+    // Compute square position in number of cells as units    
+    var squareSize = vLength(vSub(a,b));
+    let center = vMean([a,b,c,d]);
+    // Subtract squareSize/2 to get shift from top-left corner
+    // Add 1/2 [cell] to shift to the cell center
+    let [sx, sy] = sSub(center, squareSize/2 - 1/2) 
 
+
+    square.style.top = sx*100 + "%"
+    square.style.left = sy*100 + "%"
+    square.style.width = squareSize*100 + "%";
+    
+    square.style.height = square.style.width;
     square.style.visibility = "visible";
     square.style.opacity = 1;
-    square.style.width = squareSize*100*cellSizeMultiplier + "%";
-    square.style.height = squareSize*100*cellSizeMultiplier + "%";
-    square.style.left = sx*100*cellSizeMultiplier + "%"
-    square.style.top = sy*100*cellSizeMultiplier + "%"
-    square.style.transform = "rotate("+angle+"deg)";
-    square.classList.add(playerClass[currentPlayer]);
 }
 
 function bodyOnLoad()
@@ -336,5 +337,7 @@ function bodyOnLoad()
     createControls();
     createBoard();
     resetGame();
-    document.querySelector("main").removeAttribute("style");
+    // Show the page  - hide the fact the board and controls are created dynamically by JS
+    // and also show nice smooth animation (transition)
+    document.querySelector("main").style.opacity = "";
 }

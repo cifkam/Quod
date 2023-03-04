@@ -1,57 +1,29 @@
-function rad2deg(rad) {
-    return rad * 180/Math.PI;
-}
+function rad2deg(rad) { return rad * 180/Math.PI; }
 
-function vSub(a, b) {
-    return [a[0]-b[0], a[1]-b[1]];
-}
-function vAdd(a, b) {
-    return [a[0]+b[0], a[1]+b[1]];
-}
-function vDiv(a, scalar)
-{
-    return [a[0]/scalar, a[1]/scalar];
-}
-function vMult(a, scalar)
-{
-    return [a[0]*scalar, a[1]*scalar]
-}
-function vSum(vectors)
-{
+function sAdd(v, a)   { return [v[0]+a, v[1]+a]; }
+function sSub(v, a)   { return [v[0]-a, v[1]-a]; }
+function sMult(v, a)  { return [v[0]*a, v[1]*a]; }
+function sDiv(v, a)   { return [v[0]/a, v[1]/a]; }
+
+function vSub(v, w)   { return [v[0]-w[0], v[1]-w[1]]; }
+function vAdd(v, w)   { return [v[0]+w[0], v[1]+w[1]]; }
+function vOrtho(v)    { return [-v[1], v[0]] }
+function vOpposite(v) { return [-v[0], -v[1]] }
+function vEquals(v,w) { return v[0]==w[0] && v[1]==w[1]; }
+function vLength(v)   { return Math.sqrt((v[0]**2 + v[1]**2)); }
+function vDot(v,w)    { return v[0]*w[0] + v[1]*w[1]; }
+function vMean(vects) { return sDiv(vSum(vects), vects.length); }
+
+function vSum(vects) {
     let x = 0;
     let y = 0;
-    for (let i = 0; i < vectors.length; ++i)
-    {
-        x += vectors[i][0];
-        y += vectors[i][1];
+    for (let i = 0; i < vects.length; ++i) {
+        x += vects[i][0];
+        y += vects[i][1];
     }
     return [x, y];
 }
-function vMean(vectors)
-{
-    return vDiv(vSum(vectors), vectors.length);
-}
-function vOrtho(a) {
-    return [-a[1], a[0]]
-}
-function vOpposite(a)
-{
-    return [-a[0], -a[1]]
-}
-function vEquals(a,b)
-{
-    return a[0]==b[0] && a[1]==b[1];
-}
-function vLength(a)
-{
-    return Math.sqrt((a[0]**2 + a[1]**2));
-}
-function vDot(a,b)
-{
-    return a[0]*b[0] + a[1]*b[1];
-}
-function vAngle(a,b)
-{
+function vAngle(a,b) {
     return rad2deg(
         Math.acos(
             vDot(a,b) / (vLength(a)*vLength(b))
