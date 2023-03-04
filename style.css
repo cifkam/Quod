@@ -26,9 +26,15 @@ a {
 
 
 body {
-    margin: 10px;
+    margin: 0;
     font-family: OpenSans;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    min-width: 100vw;
 }
 
 main {
@@ -92,19 +98,12 @@ table.board td {
     line-height: 0;
 }
 
-.center {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -55%);
-    transform: translate(-50%, -55%);
-}
-
 
 table.board tr td a {
-    width: 40px;
-    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    width: 8.3vw;
+    height: 8.3vw;
     display: inline-block;
     border-radius: 4px;
     transition: all 0.4s ease;
@@ -114,7 +113,7 @@ table.board tr td a:hover {
     background-color: var(--gray);
 }
 
-table.board .quod {
+.quod {
     display: block;
     width: 80%;
     height: 80%;
@@ -195,12 +194,11 @@ table.board #square.player2 {
     background-color: var(--player2-color-light);
 }
 
-.player-controls a {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    margin: 1px;
-    border-radius: 50%;
+.player-controls span {
+    width: 12vw;
+    height: 12vw;
+    max-width: 40px;
+    max-height: 40px;
 }
 
 span.quasar,
@@ -210,13 +208,7 @@ a.quasar {
     border-radius: 50%;
 }
 
-.player-controls a.quasar {
-    width: 20px;
-    height: 20px;
-    margin: 10px 10px;
-}
-
-table.board span.quasar {
+.quasar {
     width: 50%;
     height: 50%;
     margin: 25%;
@@ -231,14 +223,12 @@ table.board span.quasar {
     visibility: hidden;
 }
 
-.player-controls.player1 a:first-child {
+.player-controls.player1 .quod {
     background-color: var(--player1-color);
-    margin: 4px;
 }
 
-.player-controls.player2 a:first-child {
+.player-controls.player2 .quod {
     background-color: var(--player2-color);
-    margin: 4px;
 }
 
 .grayscale {
@@ -249,29 +239,5 @@ table.board span.quasar {
     main {
         border: none;
         padding: 0!important;
-    }
-}
-@media only screen and (max-width: 470px) {
-    table.board tr td a {
-        width: 37px;
-        height: 37px;
-    }
-}
-@media only screen and (max-width: 435px) {
-    table.board tr td a {
-        width: 34px;
-        height: 34px;
-    }
-}
-@media only screen and (max-width: 400px) {
-    table.board tr td a {
-        width: 31px;
-        height: 31px;
-    }
-}
-@media only screen and (max-width: 365px) {
-    table.board tr td a {
-        width: 28px;
-        height: 28px;
     }
 }

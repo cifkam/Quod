@@ -168,17 +168,22 @@ function createControls()
     const controls0 = getPlayerControls(0);
     const controls1 = getPlayerControls(1);
     
-    let quod0 = document.createElement("a");
-    let quod1 = document.createElement("a");
+    const quod0 = document.createElement("a");
+    const quod1 = document.createElement("a");
     quod0.classList.add(playerClass[0]);
     quod1.classList.add(playerClass[1]);
     quod0.classList.add("quod");
     quod1.classList.add("quod");
     quod0.onclick = function(){activateQuods(0)};
     quod1.onclick = function(){activateQuods(1)};
+    
+    const span0 = document.createElement("span");
+    const span1 = document.createElement("span");
+    span0.appendChild(quod0);
+    span1.appendChild(quod1);
 
-    controls0.appendChild(quod0);
-    controls1.appendChild(quod1);
+    controls0.appendChild(span0);
+    controls1.appendChild(span1);
     for (let i = 0; i < 6; ++i)
     {
         const q0 = document.createElement("a");
@@ -187,9 +192,14 @@ function createControls()
         q1.classList.add("quasar")
         q0.onclick = function(){activateQuasars(0,q0)};
         q1.onclick = function(){activateQuasars(1,q1)};
+        
+        const s0 = document.createElement("span");
+        const s1 = document.createElement("span");
+        s0.appendChild(q0);
+        s1.appendChild(q1);
 
-        controls0.appendChild(q0);
-        controls1.appendChild(q1);
+        controls0.appendChild(s0);
+        controls1.appendChild(s1);
     }
 
 
