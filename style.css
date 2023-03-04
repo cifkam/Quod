@@ -203,14 +203,23 @@ table.board #square.player2 {
     border-radius: 50%;
 }
 
-.quasar,
+span.quasar,
 a.quasar {
     background-color: #444;
+    display: block;
+    border-radius: 50%;
+}
+
+.player-controls a.quasar {
     width: 20px;
     height: 20px;
     margin: 10px 10px;
-    display: block;
-    border-radius: 50%;
+}
+
+table.board span.quasar {
+    width: 50%;
+    height: 50%;
+    margin: 25%;
 }
 
 .quasar.selected {
