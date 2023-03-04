@@ -5,22 +5,38 @@
     <title>Quod Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" charset="UTF-8" src="mathFunctions.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="javascript.js"></script>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script type="text/javascript">
+        function bodyOnLoad() { document.querySelector("main").style.opacity = "1"; };
+    </script>
 </head>
 
 <body onload="bodyOnLoad();">
-    <main style="opacity: 0;">
-        <header>
-            <a id="menu-button" href="javascript:;"><img src="bars.svg"></a>
-            <h1>Quod</h1>
-            <a id="reset-button" href="javascript:resetGame();"><img src="arrow-rotate-right.svg"></a>
-        </header>
-        <div class="player0 player-controls"></div>
-        <table class="board" cellspacing="0">
-        </table>
-        <div class="player1 player-controls"></div>
+    <main style="opacity: 0; margin: 5px; max-width: 600px;">
+        <h1>Quod Game</h1>
+        
+        <p>
+            Quod is an abstract strategy game played on an 11-by-11 grid of spaces
+            with the four corner spaces removed. Players alternate placing pieces,
+            called quods, into empty spaces. A player wins by placing four quods
+            that form the four corners of a square. The square can be any size and
+            any orientation (in other words, the square can be "tilted").
+        </p>
+        <p>    
+            In addition, each player has a small number of pieces, called quasars,
+            that are used purely for blocking.
+        </p>
+        <p>
+            Quod was invented by G. Keith Stills in 1979, while he was at college,
+            and was popularized by Scientific American in March 1996.
+        </p>
+        
+        <cite>Source: <a href="http://boardgamegeek.com/boardgame/31113/quod">BoardGameGeek.com</a></cite>
+        <br><br>
+        <div>
+            <a href="game/quod.html" class="button">Start</a>
+        </div>
+
     </main>
 </body>
 

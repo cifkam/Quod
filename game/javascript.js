@@ -1,9 +1,24 @@
 const playerClass = ["player0", "player1"];
+var numberOfQuods = 6;
 var currentPlayer = null;
 var playerQuods = null;
 var quasars = null;
 var gameEnd = null;
 var quodsMode = null;
+
+function setDynamicStyle()
+{
+    document.getElementById("dynamicStyle").innerHTML = ".player-controls span {\n"+
+    "width:  calc( (100vw - 10px) / "+(numberOfQuods+1)+");\n"+
+    "height: calc( (100vw - 10px) / "+(numberOfQuods+1)+");\n"+
+    "}";
+}
+
+function setNumberOfQuods(n)
+{
+    numberOfQuods = n;
+    setDynamicStyle();
+}
 
 function getPlayerControls(player = null)
 {
@@ -172,6 +187,8 @@ function createControls()
 {
     const controls0 = getPlayerControls(0);
     const controls1 = getPlayerControls(1);
+    controls0.innerHTML = "";
+    controls1.innerHTML = "";
     
     const quod0 = document.createElement("a");
     const quod1 = document.createElement("a");
@@ -189,7 +206,7 @@ function createControls()
 
     controls0.appendChild(span0);
     controls1.appendChild(span1);
-    for (let i = 0; i < 6; ++i)
+    for (let i = 0; i < numberOfQuods; ++i)
     {
         const q0 = document.createElement("a");
         const q1 = document.createElement("a");
@@ -337,6 +354,7 @@ function bodyOnLoad()
     createControls();
     createBoard();
     resetGame();
+    setDynamicStyle();
     // Show the page  - hide the fact the board and controls are created dynamically by JS
     // and also show nice smooth animation (transition)
     document.querySelector("main").style.opacity = "";

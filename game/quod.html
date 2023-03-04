@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quod Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+    <script type="text/javascript" charset="UTF-8" src="mathFunctions.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="javascript.js"></script>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <style id="dynamicStyle"></style>
+</head>
+
+<body onload="bodyOnLoad();">
+    <main style="opacity: 0;" id="game">
+        <header>
+            <a id="menu-button" href="../index.html"><img src="house.svg"></a>
+            <h1>Quod</h1>
+            <a id="reset-button" href="javascript:resetGame();"><img src="arrow-rotate-right.svg"></a>
+        </header>
+        <div class="player0 player-controls"></div>
+        <table class="board" cellspacing="0">
+        </table>
+        <div class="player1 player-controls"></div>
+    </main>
+</body>
+
+</html>
