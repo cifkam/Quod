@@ -1,35 +1,35 @@
-const playerClass = ["player0", "player1"];
-var numberOfQuods = 6;
-var currentPlayer = null;
-var playerQuods = null;
-var quasars = null;
-var gameEnd = null;
-var quodsMode = null;
+const query = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+}); //usage: var x = query.name
 
-function setDynamicStyle()
-{
+const playerClass = ["player0", "player1"];
+var quodsMode = null;
+var game = new Game();
+
+
+function setDynamicStyle() {
     document.getElementById("dynamicStyle").innerHTML = ".player-controls span {\n"+
-    "width:  calc( (100vw - 10px) / "+(numberOfQuods+1)+");\n"+
-    "height: calc( (100vw - 10px) / "+(numberOfQuods+1)+");\n"+
+    "width:  calc( (100vw - 10px) / "+(game.numberOfQuasars+1)+");\n"+
+    "height: calc( (100vw - 10px) / "+(game.numberOfQuasars+1)+");\n"+
     "}";
 }
 
-function setNumberOfQuods(n)
-{
-    numberOfQuods = n;
+
+function setNumberOfQuasars(n) {
+    numberOfQuasars = n;
     setDynamicStyle();
 }
 
-function getPlayerControls(player = null)
-{
-    if (player == null) player = currentPlayer;
+
+function getPlayerControls(player = null) {
+    if (player == null) player = game.currPlayer;
     return document.querySelector(".player-controls."+playerClass[player]);
 }
 
-function activateQuods(player = null)
-{
-    if (player == null) player = currentPlayer;
-    else if (player != currentPlayer || quodsMode || gameEnd)
+
+function activateQuods(player = null) {
+    if (player == null) player = game.currPlayer;
+    else if (player != game.currPlayer || quodsMode || game.end)
         return;
     
     const controls = getPlayerControls(player);
@@ -42,14 +42,13 @@ function activateQuods(player = null)
     quodsMode = true;
 }
 
-function activateQuasars(player = null, quasar = null)
-{
-    if (player == null) player = currentPlayer;
-    else if (player != currentPlayer || gameEnd) return false;
+
+function activateQuasars(player = null, quasar = null) {
+    if (player == null) player = game.currPlayer;
+    else if (player != game.currPlayer || game.end) return false;
     
     const controls = getPlayerControls(player);
-    if (quasar == null)
-    {
+    if (quasar == null) {
         // Get the the last (rightmost) unselected quasar
         quasar = Array.from(getPlayerControls().querySelectorAll(".quasar"))
             .reverse()
@@ -59,8 +58,7 @@ function activateQuasars(player = null, quasar = null)
             return false;
     }
 
-    if (!quasar.classList.contains("selected"))
-    {
+    if (!quasar.classList.contains("selected")) {
         controls.querySelectorAll(".quasar").forEach((q) => {
             q.classList.remove("selected");
         });
@@ -73,8 +71,8 @@ function activateQuasars(player = null, quasar = null)
     return true;
 }
 
-function resetGame()
-{
+
+function resetGame() {
     // Remove all quads and quasars from the board
     document.querySelectorAll("table.board .cell .quod").forEach(el => el.classList.remove("quod"));
     document.querySelectorAll("table.board .cell .quasar").forEach(el => el.classList.remove("quasar"));
@@ -94,49 +92,47 @@ function resetGame()
     document.querySelectorAll(".used").forEach(q => q.classList.remove("used"));
     document.querySelectorAll(".taken").forEach(q => q.classList.remove("taken"));
     
-    // Reset variables
-    playerQuods = [[],[]];
-    quasars = [];
-    gameEnd = false;
-    currentPlayer = 0;
-
+    game = new Game();
     activateQuods();
 }
 
 
-function switchPlayers()
-{
-    getPlayerControls(currentPlayer).classList.add("grayscale");
-    getPlayerControls(1-currentPlayer).classList.remove("grayscale");
+function switchPlayers() {
+    getPlayerControls(game.currPlayer).classList.add("grayscale");
+    getPlayerControls(1-game.currPlayer).classList.remove("grayscale");
     activateQuods();
 
-    currentPlayer = 1 - currentPlayer;
+    game.switchPlayers();
 }
 
-function addQuod(coords, cell)
-{
+
+function addQuod(row, col, cell = null) {
+    if (!game.moveQuod(row, col))
+        return false;
+
     if (cell == null)
-        cell = document.querySelector(".row "+coords[0]+".col"+coords[1] + " .cell");
+    cell = document.querySelector(".row "+row+".col"+col + " .cell");
+
     cell.parentElement.classList.add("taken");
-    cell.classList.add(playerClass[currentPlayer]);
-    playerQuods[currentPlayer].push(coords);
+    cell.classList.add(playerClass[game.currPlayer]);
     cell.querySelector("span").classList.add("quod");
-    var [a,b,c,d] = findSquare();
+    
+    var [a,b,c,d] = game.findSquare();
     if (a !== null)
-    {
         drawSquare(a,b,c,d);
-        gameEnd = true;
-        return;
-    }
+
+    return true;
 }
 
-function addQuasar(coords, cell)
-{
+
+function addQuasar(row, col, cell = null) {
+    if (!game.moveQuasar(row, col))
+        return false;
+    
     if (cell == null)
-        cell = document.querySelector(".row "+coords[0]+".col"+coords[1] + " .cell");
+        cell = document.querySelector(".row "+row + ".col"+col + " .cell");
 
     cell.parentElement.classList.add("taken");
-    quasars.push(coords);
     cell.querySelector("span").classList.add("quasar");
     const controls = getPlayerControls();
     quasar = Array.from(controls.querySelectorAll(".quasar"))
@@ -144,42 +140,59 @@ function addQuasar(coords, cell)
         .find(q => !q.classList.contains("used"));
     quasar.classList.remove("selected");
     quasar.classList.add("used");
+    return true;
 }
 
+
 function move(i, j, cell = null) {
-    if (gameEnd)
-    {
+    if (game.end) {
         resetGame();
         return;
     }
 
-    var coords = [i,j];
-    
-    // Check that cell doesn't contain quod
-    for (let p = 0; p < 2; ++p)
-        for (let i = 0; i < playerQuods[p].length; ++i)
-            if (vEquals(playerQuods[p][i], coords))
-                return;
-    
-    // Check that cell doesn't contain quasar
-    for (let i = 0; i < quasars.length; ++i)
-        if (vEquals(quasars[i], coords))
-            return;
-
-    if (quodsMode)
-    {
-        addQuod(coords, cell);
+    if (quodsMode) {
+        if (!addQuod(i,j, cell))
+            return false;
     }
-    else
-    {
-        addQuasar(coords, cell);
+    else {
+        if (!addQuasar(i, j, cell))
+            return false;
+
         if (!activateQuasars())
             activateQuods();
-        return;
+
+        return true;
     }
 
-    if (!gameEnd)
+    if (!game.end)
         switchPlayers();
+
+    return true;
+}
+
+
+function drawSquare(a,b,c,d) {
+    const square = document.getElementById("square");
+    
+    // Compute square rotation angle
+    var vec = vSub(b,a);
+    var angle = vAngle(vec, [0, vec[0] > 0 ? 1 : -1]);// % 90;
+    square.style.transform = "rotate("+angle+"deg)";
+    
+    // Compute square position in number of cells as units    
+    var squareSize = vLength(vSub(a,b));
+    let center = vMean([a,b,c,d]);
+    // Subtract squareSize/2 to get shift from top-left corner
+    // Add 1/2 [cell] to shift to the cell center
+    let [sx, sy] = sSub(center, squareSize/2 - 1/2) 
+
+    square.style.top = sx*100 + "%"
+    square.style.left = sy*100 + "%"
+    square.style.width = squareSize*100 + "%";
+    
+    square.style.height = square.style.width;
+    square.style.visibility = "visible";
+    square.style.opacity = 1;
 }
 
 
@@ -206,8 +219,7 @@ function createControls()
 
     controls0.appendChild(span0);
     controls1.appendChild(span1);
-    for (let i = 0; i < numberOfQuods; ++i)
-    {
+    for (let i = 0; i < game.numberOfQuasars; ++i) {
         const q0 = document.createElement("a");
         const q1 = document.createElement("a");
         q0.classList.add("quasar")
@@ -223,25 +235,20 @@ function createControls()
         controls0.appendChild(s0);
         controls1.appendChild(s1);
     }
-
-
 }
+
 
 function createBoard()
 {
     const board = document.querySelector("table.board");
-    for (let i = 0; i < 11; ++i)
-    {
+    for (let i = 0; i < 11; ++i) {
         const tr = document.createElement("tr");
         tr.classList.add("row"+i);
-        for (let j = 0; j < 11; ++j)
-        {
+        for (let j = 0; j < 11; ++j) {
             const td = document.createElement("td");
             td.classList.add("col"+j);
-
             
-            if (i == 0 && j == 0) // prepare the square
-            {
+            if (i == 0 && j == 0) { // prepare the #square element
                 const square = document.createElement("div");
                 square.id = "square";
                 const svg = document.createElement("img");
@@ -252,17 +259,14 @@ function createBoard()
                 square.onclick = function(){resetGame();};
             }
 
-            if (!(i == 0 && (j == 0 || j == 10) || i == 10 && (j == 0 || j == 10)))
-            {
+            if (!(i == 0 && (j == 0 || j == 10) || i == 10 && (j == 0 || j == 10))) {
                 const cell = document.createElement("a");
                 cell.onclick = function(){move(i, j, cell);};
                 cell.classList.add("cell")
                 const quod = document.createElement("span");
-                //quod.classList.add("quod");
                 cell.appendChild(quod);
                 td.appendChild(cell);
             }
-
             tr.appendChild(td);
         }
         board.appendChild(tr);
@@ -270,87 +274,7 @@ function createBoard()
 }
 
 
-
-function findSquare()
-{
-    const quods = playerQuods[currentPlayer];
-    if (quods.length < 4)
-        return [null, null, null, null];
-
-    
-    // One of the points must be new - last item in playerQuods[player] array:
-    const a = quods.length-1;
-    const qa = quods[a];
-
-    // Iterate over the others
-    for (let b = 0; b < quods.length-1; ++b)
-    {
-        const qb = quods[b];
-        const vec = vOrtho(vSub(qb,qa));
-        
-        // We already have 2 points, so we can generate only 4 candidates
-        // and check if we already have the right ones in the list
-        const candidates = [vAdd(qa,vec), vAdd(qb,vec), vSub(qa,vec), vSub(qb,vec)];
-        // 2 ← qa → 0
-        //     ↓
-        // 3 ← qb → 1
-        
-        for (let c = 0; c < quods.length-1; ++c)
-        {
-            const qc = quods[c];
-            
-            // Check if qc is a candidate
-            const idx = candidates.findIndex((item) => {
-                return vEquals(item, qc);
-            });
-            
-            if (idx === -1)
-            continue;
-            
-            // 0 <--> 1 ; 2 <--> 3
-            const qd = candidates[ idx+(idx+1)%2*2-1 ];
-            
-            // Check if qd is in the list
-            for (let d = 0; d < quods.length-1; ++d)
-            {
-                if (vEquals(qd, quods[d]))
-                return[qa, qb, qc, qd];
-            }
-        }
-    }
-    
-    return [null, null, null, null];
-}
-
-
-function drawSquare(a,b,c,d)
-{
-    const square = document.getElementById("square");
-    
-    // Compute square rotation angle
-    var vec = vSub(b,a);
-    var angle = vAngle(vec, [0, vec[0] > 0 ? 1 : -1]);// % 90;
-    square.style.transform = "rotate("+angle+"deg)";
-    
-    // Compute square position in number of cells as units    
-    var squareSize = vLength(vSub(a,b));
-    let center = vMean([a,b,c,d]);
-    // Subtract squareSize/2 to get shift from top-left corner
-    // Add 1/2 [cell] to shift to the cell center
-    let [sx, sy] = sSub(center, squareSize/2 - 1/2) 
-
-
-    square.style.top = sx*100 + "%"
-    square.style.left = sy*100 + "%"
-    square.style.width = squareSize*100 + "%";
-    
-    square.style.height = square.style.width;
-    square.style.visibility = "visible";
-    square.style.opacity = 1;
-}
-
-function bodyOnLoad()
-{
+function bodyOnLoad() {
     createControls();
     createBoard();
     resetGame();
