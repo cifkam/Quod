@@ -90,6 +90,7 @@ function move(i, j, cell = null) {
 
 
 function resetGame() {
+    activateQuods();
     if (game.numberOfQuasars != numberOfQuasars)
         createControls();
 
